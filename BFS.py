@@ -12,7 +12,7 @@ with open(os.path.join(base_path, "Coordinates.txt")) as data:
 def Bfs(start, goal):
     queue=[[start]]#aqueue of lists
     visited=[]#list of the visited elements
-#loop while the queue is not empty
+    
     while queue:
         
         #the path equal the last list in the queue
