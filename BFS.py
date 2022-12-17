@@ -10,13 +10,15 @@ with open(os.path.join(base_path, "Coordinates.txt")) as data:
 
 # start city to  end city
 def Bfs(start, goal):
-    queue=[[start]]
-    visited=[]
-
+    queue=[[start]]#aqueue of lists
+    visited=[]#list of the visited elements
+#loop while the queue is not empty
     while queue:
-        path = queue.pop(0)
-        node = path[-1]
         
+        #the path equal the last list in the queue
+        path = queue.pop(0)
+        node = path[-1]#node equal the last element in the path
+   
         if node  in visited:
             continue
 
@@ -25,8 +27,12 @@ def Bfs(start, goal):
         if node==goal :
             return path
         else:
+            
+            #all the adjacents of the last node
             adjacent_nodes = real_distances.get(node,[])
+            
             for node2 in adjacent_nodes:
+                #add every adjacent to the path and push the path to the queue
                 new_path = path.copy()
                 new_path.append(node2)
                 queue.append(new_path)
