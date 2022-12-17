@@ -1,4 +1,6 @@
 import tkinter
+import webbrowser
+
 import tkintermapview
 import os
 from BFS import Bfs
@@ -8,129 +10,171 @@ from Uniform_Cost import uniform_cost
 
 base_path = os.path.dirname(os.path.abspath(__file__))
 
-#root widget
+# root widget
 root = tkinter.Tk()
 
-#creating window's title
-root.title("best path calculator")
+# creating window's title
+root.title("Find Path with different Algorithms")
 
-#setting a default window size
+# setting a default window size
 root.geometry("900x800")
 
-#opening coordiantes files and storing them as dictionary {'city': [lat, long]}
+# opening coordinates files and storing them as dictionary {'city': [lat, long]}
 with open(os.path.join(base_path, "Coordinates.txt")) as data:
-    coordinates=eval(data.read())   
+    coordinates = eval(data.read())
 
-#creating map_widget and adding to the root window
-map_widget = tkintermapview.TkinterMapView(width=900, height=600, corner_radius=30)
+# creating map_widget and adding to the root window
+map_widget = tkintermapview.TkinterMapView(
+    width=900, height=600, corner_radius=30)
 map_widget.pack(padx=20, pady=10, expand=True, fill='both')
-#setting map service to google maps server
-map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22) 
+# setting map service to google maps server
+map_widget.set_tile_server(
+    "https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
 
-#setting initial position and zoom
+# setting initial position and zoom
 map_widget.set_address('Cairo, Egypt')
 map_widget.set_zoom(8.5)
 
-#adding frame widget below map_widget on the root window
+# adding frame widget below map_widget on the root window
 control_frame = tkinter.LabelFrame(root, text="Path controller")
 control_frame.pack(fill='both', expand=True, padx=20, pady=5)
 
-#creating a list of all available cities by names
+# creating a list of all available cities by names
 cities = list(coordinates.keys())
+#cities = cities.sort()
 
-#origin city option list
+# origin city option list
 # creating label and adding it the frame control widget which created before
 origin_label = tkinter.Label(control_frame, text="Origin City", padx=5)
 origin_label.grid(row=0, column=0, padx=10, pady=5)
 
-#creating combo box widget and adding it to frame control widget
+# creating combo box widget and adding it to frame control widget
 origin_choice = tkinter.StringVar()
-origin_city = tkinter.ttk.Combobox(control_frame, width = 15, textvariable = origin_choice)
+origin_city = tkinter.ttk.Combobox(control_frame, width=15, textvariable=origin_choice, state="readonly")
 origin_city['values'] = cities
 origin_city.grid(row=1, column=0, padx=10)
-origin_city.current(1)
+origin_city.current(0)
 
 
-#destination city options list
+# destination city options list
 # creating label and adding it the frame control widget which created before
 dest_label = tkinter.Label(control_frame, text="Destination City", padx=5)
 dest_label.grid(row=0, column=1, padx=10, pady=5)
 
-#creating combo box widget and adding it to frame control widget
+# creating combo box widget and adding it to frame control widget
 dest_choice = tkinter.StringVar()
-destination_city = tkinter.ttk.Combobox(control_frame, width = 15, textvariable = dest_choice)
+destination_city = tkinter.ttk.Combobox(
+    control_frame, width=15, textvariable=dest_choice, state="readonly")
 destination_city['values'] = cities
 destination_city.grid(row=1, column=1, padx=10)
 destination_city.current(1)
 
-#Algorithm choice options list
+# Algorithm choice options list
 # creating label and adding it the frame control widget which created before
 algo_label = tkinter.Label(control_frame, text="Algorithm Choice", padx=5)
 algo_label.grid(row=0, column=2, padx=10, pady=5)
 
-#creating combo box widget and adding it to frame control widget
+# creating combo box widget and adding it to frame control widget
 algo_choice = tkinter.StringVar()
-algorithm_choice = tkinter.ttk.Combobox(control_frame, width = 15, textvariable = algo_choice)
+algorithm_choice = tkinter.ttk.Combobox(
+    control_frame, width=15, textvariable=algo_choice, state="readonly")
 algorithm_choice['values'] = ['BFS', 'DFS', 'A*', 'Uniform-Cost']
 algorithm_choice.grid(row=1, column=2, padx=5)
 algorithm_choice.current(1)
 
-#creating a global path and markers_list to be checked in get_path function
-#every time it's executed
+# creating a global path and markers_list to be checked in get_path function
+# every time it's executed
 path = None
 markers_list = []
 
+
+def clear_map():
+    if path:
+        # clearing every mark on the map
+        for marker in markers_list:
+            marker.delete()
+        # deleting the old path
+        path.delete()
+
 def get_path():
 
-    #declaring that we want to use and access them as a global variables
+    # declaring that we want to use and access them as a global variables
     global path
     global markers_list
 
-    #checking if there is a created path from previous operation 
+    # checking if there is a created path from previous operation
     if path:
-        #clearing every mark on the map
+        # clearing every mark on the map
         for marker in markers_list:
             marker.delete()
-        #deleteing the old path
+        # deleting the old path
         path.delete()
 
-    #getting the resultant order of cities using our predifined functions
-    #each one represent different searching algorithm depending on user's choice
+    # getting the resultant order of cities using our predefined functions
+    # each one represent different searching algorithm depending on user's choice
     if algorithm_choice.get() == 'BFS':
-        path_cities = Bfs(origin_city.get(),destination_city.get())
+        path_cities = Bfs(origin_city.get(), destination_city.get())
 
     elif algorithm_choice.get() == 'DFS':
-        path_cities = DFS(origin_city.get(),destination_city.get())
+        path_cities = DFS(origin_city.get(), destination_city.get())
 
     elif algorithm_choice.get() == 'Uniform-Cost':
-        path_cities = uniform_cost(origin_city.get(),destination_city.get())
+        path_cities = uniform_cost(origin_city.get(), destination_city.get())
 
     elif algorithm_choice.get() == 'A*':
-        path_cities = A_star(origin_city.get(),destination_city.get())
+        path_cities = A_star(origin_city.get(), destination_city.get())
         path_cities = [city[0] for city in path_cities]
 
-    # if the choice not correct for any reason we termintate the function
+    # if the choice not correct for any reason we terminate the function
     else:
         return
-    
-    #path_coordinates is used to hold the coordinates of every city in the path
-    #to be used later in creating the path
+
+    # path_coordinates is used to hold the coordinates of every city in the path
+    # to be used later in creating the path
     path_coordinates = []
-    
+
     for city in path_cities:
-        #we get the coordinates of every city from our data, creating a marker from it
-        marker = map_widget.set_marker(coordinates[city][0], coordinates[city][1], text=city, text_color='red')
-        # we add every marker to out markers_list to keep track of them 
+        # we get the coordinates of every city from our data, creating a marker from it
+        marker = map_widget.set_marker(
+            coordinates[city][0], coordinates[city][1], text=city, text_color='red')
+        # we add every marker to out markers_list to keep track of them
         # and to be cleared later for new operations
         markers_list.append(marker)
-        #adding every marker's (city) coordinates to the path_coordinates list
+        # adding every marker's (city) coordinates to the path_coordinates list
         path_coordinates.append(marker.position)
 
-    #drawing the path on the map
+    # drawing the path on the map
     path = map_widget.set_path(path_coordinates, width=7)
-    
+
+
 # creating and adding the Get Path button to appear on the control frame
-action_btn = tkinter.Button(control_frame, text="Get Path", command=get_path)
+action_btn = tkinter.Button(control_frame, text="Get Path", command=get_path,bg="Green")
 action_btn.grid(row=1, column=3, padx=5)
+
+# clear map from markers
+clear_map = tkinter.Button(control_frame, text="Clear", command=clear_map,bg="Red")
+clear_map.grid(row=1, column=5, padx=5)
+
+def callback(url):
+    webbrowser.open_new(url)
+
+l1=tkinter.Label(text="Mohammed Samir ",fg='blue',font=3)
+l1.place(x=900,y=700)
+l1.bind("<Button-1>", lambda e: callback("https://github.com/mohamed591195"))
+
+l2=tkinter.Label(text="Mostafa Wael ",fg='blue',font=3)
+l2.place(x=900,y=740)
+l2.bind("<Button-1>", lambda e: callback("https://github.com/Mostafa-Wael-Elsahity"))
+
+l3=tkinter.Label(text="Mohammed Abo Taleb",fg='blue',font=3)
+l3.place(x=1100,y=700)
+l3.bind("<Button-1>", lambda e: callback("https://github.com/MohamedAbdElghanyAbotaleb"))
+
+l4=tkinter.Label(text="Mohammed Reda ",fg='blue',font=3)
+l4.place(x=1100,y=740)
+l4.bind("<Button-1>", lambda e: callback("https://github.com/mohammedzahw"))
+
+l5=tkinter.Label(text="Created by (Github Links): ",fg='black',font=3)
+l5.place(x=600,y=690)
 
 root.mainloop()
