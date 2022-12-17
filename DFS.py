@@ -7,6 +7,7 @@ base_path = os.path.dirname(os.path.abspath(__file__))
 with open(os.path.join(base_path, 'Real_distance_between_cities.txt')) as data:
     cities_real_distance = eval(data.read())
 
+
 # algorithm based on straight forward path
 
 # start city -> end city

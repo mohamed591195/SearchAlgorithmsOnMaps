@@ -5,7 +5,7 @@ from BFS import Bfs
 from A_star import A_star
 from DFS import DFS
 from Uniform_Cost import uniform_cost
-
+import webbrowser
 base_path = os.path.dirname(os.path.abspath(__file__))
 
 # root widget
@@ -39,7 +39,7 @@ control_frame.pack(fill='both', expand=True, padx=20, pady=5)
 
 # creating a list of all available cities by names
 cities = list(coordinates.keys())
-#cities = cities.sort()
+# cities = cities.sort()
 
 # origin city option list
 # creating label and adding it the frame control widget which created before
@@ -52,7 +52,6 @@ origin_city = tkinter.ttk.Combobox(control_frame, width=15, textvariable=origin_
 origin_city['values'] = cities
 origin_city.grid(row=1, column=0, padx=10)
 origin_city.current(0)
-
 
 # destination city options list
 # creating label and adding it the frame control widget which created before
@@ -95,7 +94,6 @@ def clear_map():
         path.delete()
 
 def get_path():
-
     # declaring that we want to use and access them as a global variables
     global path
     global markers_list
@@ -146,11 +144,33 @@ def get_path():
 
 
 # creating and adding the Get Path button to appear on the control frame
-action_btn = tkinter.Button(control_frame, text="Get Path", command=get_path,bg="Green")
+action_btn = tkinter.Button(control_frame, text="Get Path", command=get_path, bg="Green")
 action_btn.grid(row=1, column=3, padx=5)
 
 # clear map from markers
-clear_map = tkinter.Button(control_frame, text="Clear", command=clear_map,bg="Red")
+clear_map = tkinter.Button(control_frame, text="Clear", command=clear_map, bg="Red")
 clear_map.grid(row=1, column=5, padx=5)
+
+def callback(url):
+    webbrowser.open_new(url)
+
+l1=tkinter.Label(text="Mohammed Samir ",fg='blue',font=3)
+l1.place(x=900,y=700)
+l1.bind("<Button-1>", lambda e: callback("https://github.com/mohamed591195"))
+
+l2=tkinter.Label(text="Mostafa Wael ",fg='blue',font=3)
+l2.place(x=900,y=740)
+l2.bind("<Button-1>", lambda e: callback("https://github.com/Mostafa-Wael-Elsahity"))
+
+l3=tkinter.Label(text="Mohammed Abo Taleb",fg='blue',font=3)
+l3.place(x=1100,y=700)
+l3.bind("<Button-1>", lambda e: callback("https://github.com/MohamedAbdElghanyAbotaleb"))
+
+l4=tkinter.Label(text="Mohammed Reda ",fg='blue',font=3)
+l4.place(x=1100,y=740)
+l4.bind("<Button-1>", lambda e: callback("https://github.com/mohammedzahw"))
+
+l5=tkinter.Label(text="Created by (Github Links): ",fg='black',font=3)
+l5.place(x=600,y=690)
 
 root.mainloop()
