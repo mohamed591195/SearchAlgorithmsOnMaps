@@ -3,33 +3,34 @@ import os
 base_path = os.path.dirname(os.path.abspath(__file__))
 
 with open(os.path.join(base_path, "Real_distance_between_cities.txt")) as data:
-    real_distances=eval(data.read())
+    real_distances = eval(data.read())
 
 with open(os.path.join(base_path, "Coordinates.txt")) as data:
-    coordinates=eval(data.read())   
+    coordinates = eval(data.read())
 
 
+# start city -> end city
 def Bfs(start, goal):
-    path=[]
-    queue=[]
-    visited=[]
-
-    queue.append(start)
+    queue = [[start]]
+    visited = []
 
     while queue:
-        current_node=queue.pop(0)
+        path = queue.pop(0)
+        node = path[-1]
 
-        if current_node  in visited:
+        if node in visited:
             continue
 
-        path.append(current_node)
-        visited.append(current_node)
+        visited.append(node)
 
-        if current_node==goal :
+        if node == goal:
             return path
         else:
-            for next_node in real_distances[current_node]:
-                queue.append(next_node)
+            adjacent_nodes = real_distances.get(node, [])
+            for node2 in adjacent_nodes:
+                new_path = path.copy()
+                new_path.append(node2)
+                queue.append(new_path)
 
 
 

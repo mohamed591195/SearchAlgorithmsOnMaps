@@ -1,30 +1,33 @@
 import os
 
+# get file distance
 base_path = os.path.dirname(os.path.abspath(__file__))
 
+# read distance as a graph (dictionary)
 with open(os.path.join(base_path, 'Real_distance_between_cities.txt')) as data:
-    cities_real_distance=eval(data.read())
+    cities_real_distance = eval(data.read())
 
-def DFS(start,goal):
-    path=[]
-    stack=[]
-    visited=[]
-    stack.append(start)
+# algo based on straight forward pass
+
+
+def DFS(start, goal):
+    stack = [[start]]
+    visited = []
 
     while stack:
-        current_node=stack.pop(-1)
+        path = stack.pop(-1)
+        node = path[-1]
 
-        if current_node  in visited:
+        if node in visited:
             continue
 
-        path.append(current_node)
-        visited.append(current_node)
+        visited.append(node)
 
-        if current_node==goal :
+        if node == goal:
             return path
         else:
-            for next_node in cities_real_distance[current_node]:
-                stack.append(next_node)
-
-
-
+            adjacent_nodes = cities_real_distance.get(node, [])
+            for node2 in adjacent_nodes:
+                new_path = path.copy()
+                new_path.append(node2)
+                stack.append(new_path)
