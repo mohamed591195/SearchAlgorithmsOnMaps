@@ -1,6 +1,6 @@
 import os
 
-base_path = os.path.dirname(os.path.abspath(_file_))
+base_path = os.path.dirname(os.path.abspath(__file__))
 
 with open(os.path.join(base_path, "Real_distance_between_cities.txt")) as data:
     real_distances=eval(data.read())
