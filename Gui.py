@@ -22,12 +22,14 @@ with open(os.path.join(base_path, "Coordinates.txt")) as data:
     coordinates = eval(data.read())
 
 # creating map_widget and adding to the root window
-map_widget = tkintermapview.TkinterMapView(
-    width=900, height=600, corner_radius=30)
+map_widget = tkintermapview.TkinterMapView(width=900, height=600, corner_radius=30)
 map_widget.pack(padx=20, pady=10, expand=True, fill='both')
+
 # setting map service to google maps server
 map_widget.set_tile_server(
-    "https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
+    "https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", 
+    max_zoom=22
+)
 
 # setting initial position and zoom
 map_widget.set_address('Cairo, Egypt')
@@ -39,7 +41,6 @@ control_frame.pack(fill='both', expand=True, padx=20, pady=5)
 
 # creating a list of all available cities by names
 cities = list(coordinates.keys())
-# cities = cities.sort()
 
 # origin city option list
 # creating label and adding it the frame control widget which created before
@@ -61,7 +62,11 @@ dest_label.grid(row=0, column=1, padx=10, pady=5)
 # creating combo box widget and adding it to frame control widget
 dest_choice = tkinter.StringVar()
 destination_city = tkinter.ttk.Combobox(
-    control_frame, width=15, textvariable=dest_choice, state="readonly")
+    control_frame, 
+    width=15, 
+    textvariable=dest_choice, 
+    state="readonly"
+)
 destination_city['values'] = cities
 destination_city.grid(row=1, column=1, padx=10)
 destination_city.current(1)
@@ -74,7 +79,12 @@ algo_label.grid(row=0, column=2, padx=10, pady=5)
 # creating combo box widget and adding it to frame control widget
 algo_choice = tkinter.StringVar()
 algorithm_choice = tkinter.ttk.Combobox(
-    control_frame, width=15, textvariable=algo_choice, state="readonly")
+    control_frame, 
+    width=15, 
+    textvariable=algo_choice, 
+    state="readonly"
+)
+
 algorithm_choice['values'] = ['BFS', 'DFS', 'A*', 'Uniform-Cost']
 algorithm_choice.grid(row=1, column=2, padx=5)
 algorithm_choice.current(1)
